@@ -296,16 +296,16 @@ PREVIEW is the preview function."
 
 CHARS is the list of narrowing prefix strings."
   (minibuffer-with-setup-hook
-      (lambda ()
-        (let ((keymap (make-composed-keymap nil (current-local-map))))
-          (define-key keymap " "
-            `(menu-item "" nil :filter
-                        ,(lambda
-                           (&optional _)
-                           (let ((str (minibuffer-contents)))
-                             (when (member str chars)
-                               'consult-insert-for-narrow)))))
-          (use-local-map keymap)))
+      (:append (lambda ()
+                 (let ((keymap (make-composed-keymap nil (current-local-map))))
+                   (define-key keymap " "
+                     `(menu-item "" nil :filter
+                                 ,(lambda
+                                    (&optional _)
+                                    (let ((str (minibuffer-contents)))
+                                      (when (member str chars)
+                                        'consult-insert-for-narrow)))))
+                   (use-local-map keymap))))
     (funcall body)))
 
 (defmacro consult--with-narrow (chars &rest body)
